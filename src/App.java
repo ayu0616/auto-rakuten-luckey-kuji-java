@@ -48,12 +48,15 @@ public class App {
         List<String> erroredUrl = new ArrayList<String>();
 
         System.out.println("1回目");
-        for (String kujiUrl : kujiUrlList) {
+
+        int len = kujiUrlList.size();
+        for (int i = 0; i < len; i++) {
+            String kujiUrl = kujiUrlList.get(i);
             try {
                 drawKuji(driver, kujiUrl);
-                System.out.println("succeeded " + kujiUrl);
+                System.out.printf("%d/%d : succeeded %s\n", i + 1, len, kujiUrl);
             } catch (Exception e) {
-                System.out.println("failed " + kujiUrl);
+                System.out.printf("%d/%d : failed %s\n", i + 1, len, kujiUrl);
                 // e.printStackTrace();
                 erroredUrl.add(kujiUrl);
             }
@@ -61,13 +64,16 @@ public class App {
 
         // エラーしたくじをやり直す
         System.out.println("2回目");
-        for (String kujiUrl : erroredUrl) {
+
+        len = erroredUrl.size();
+        for (int i = 0; i < len; i++) {
+            String kujiUrl = kujiUrlList.get(i);
             try {
                 drawKuji(driver, kujiUrl);
-                System.out.println("succeeded " + kujiUrl);
+                System.out.printf("%d/%d : succeeded %s\n", i + 1, len, kujiUrl);
             } catch (Exception e) {
                 // e.printStackTrace();
-                System.out.println("failed " + kujiUrl);
+                System.out.printf("%d/%d : failed %s\n", i + 1, len, kujiUrl);
             }
         }
 
