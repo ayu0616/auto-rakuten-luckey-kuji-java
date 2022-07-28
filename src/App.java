@@ -13,8 +13,9 @@ import org.openqa.selenium.By;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        List<String> kujiUrlList = readKujiList(
-                "/Users/OgawaAyumu/Library/CloudStorage/OneDrive-KyotoUniversity/趣味/プログラミング練習/Java/auto-rakuten-luckey-kuji/kuji_list.txt");
+        String urlListPath =
+                "/Users/OgawaAyumu/Library/CloudStorage/OneDrive-KyotoUniversity/趣味/プログラミング練習/Java/auto-rakuten-luckey-kuji/kuji_list.txt";
+        List<String> kujiUrlList = readKujiList(urlListPath);
 
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200",
@@ -44,16 +45,15 @@ public class App {
         wait.doWait();
 
         // 実際にくじを引く
-        // int urlNum = kujiUrlList.size();
-        List<String> erroredUrl = new ArrayList<String>();
+        List<String> erroredUrl = new ArrayList<String>(); // 失敗したくじのURLを格納
+        NotClosedUrlList notClosedUrlList = new NotClosedUrlList(); // くじのうち閉鎖されていないものを格納するリスト
 
         System.out.println("1回目");
-
         int len = kujiUrlList.size();
         for (int i = 0; i < len; i++) {
             String kujiUrl = kujiUrlList.get(i);
             try {
-                drawKuji(driver, kujiUrl);
+                drawKuji(driver, kujiUrl, notClosedUrlList);
                 System.out.printf("%d/%d : succeeded %s\n", i + 1, len, kujiUrl);
             } catch (Exception e) {
                 System.out.printf("%d/%d : failed %s\n", i + 1, len, kujiUrl);
@@ -64,18 +64,19 @@ public class App {
 
         // エラーしたくじをやり直す
         System.out.println("2回目");
-
         len = erroredUrl.size();
         for (int i = 0; i < len; i++) {
             String kujiUrl = kujiUrlList.get(i);
             try {
-                drawKuji(driver, kujiUrl);
+                drawKuji(driver, kujiUrl, notClosedUrlList);
                 System.out.printf("%d/%d : succeeded %s\n", i + 1, len, kujiUrl);
             } catch (Exception e) {
                 // e.printStackTrace();
                 System.out.printf("%d/%d : failed %s\n", i + 1, len, kujiUrl);
             }
         }
+
+        notClosedUrlList.updateList(urlListPath);
 
         // ドライバーを閉じる
         Thread.sleep(60 * 1000);
@@ -96,10 +97,13 @@ public class App {
         driver.findElement(By.cssSelector("#loginInner > p:nth-child(3) > input")).click();
     }
 
-    public static void drawKuji(WebDriver driver, String kujiUrl) throws Exception {
+    public static void drawKuji(WebDriver driver, String kujiUrl, NotClosedUrlList notClosedUrlList)
+            throws Exception {
         driver.switchTo().newWindow(WindowType.TAB);
         driver.get(kujiUrl);
         Thread.sleep(1000 * 2); // リンクが開くまで待機
+        String pageUrl = driver.getCurrentUrl();
+        notClosedUrlList.push(pageUrl); // 閉鎖されていないURLかどうかを判定してリストに格納
         driver.findElement(By.cssSelector("#entry")).click(); // くじを引く
     }
 }
