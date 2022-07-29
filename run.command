@@ -1,0 +1,1 @@
+java -jar --enable-preview "/Users/OgawaAyumu/Library/CloudStorage/OneDrive-KyotoUniversity/趣味/プログラミング練習/Java/auto-rakuten-luckey-kuji/auto-rakuten-luckey-kuji.jar"

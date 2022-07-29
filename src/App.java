@@ -103,7 +103,7 @@ public class App {
         driver.get(kujiUrl);
         Thread.sleep(1000 * 2); // リンクが開くまで待機
         String pageUrl = driver.getCurrentUrl();
-        notClosedUrlList.push(pageUrl); // 閉鎖されていないURLかどうかを判定してリストに格納
+        notClosedUrlList.push(kujiUrl, pageUrl); // 閉鎖されていないURLかどうかを判定してリストに格納
         driver.findElement(By.cssSelector("#entry")).click(); // くじを引く
     }
 }

@@ -9,9 +9,9 @@ public class NotClosedUrlList extends ArrayList<String> {
         return url.substring(url.length() - 5).equals("close");
     }
 
-    public void push(String url) {
-        if (!isClosed(url)) {
-            this.add(url);
+    public void push(String listUrl, String checkUrl) {
+        if (!isClosed(checkUrl)) {
+            this.add(listUrl);
         }
     }
 
