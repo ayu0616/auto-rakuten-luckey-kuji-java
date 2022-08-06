@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +16,11 @@ import org.openqa.selenium.By;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        if (!internetIsAvailable()) {
+            System.out.println("インターネットに接続されていません");
+            return;
+        }
+
         String urlListPath =
                 "/Users/OgawaAyumu/Library/CloudStorage/OneDrive-KyotoUniversity/趣味/プログラミング練習/Java/auto-rakuten-luckey-kuji/kuji_list.txt";
         List<String> kujiUrlList = readKujiList(urlListPath);
@@ -105,5 +113,19 @@ public class App {
         String pageUrl = driver.getCurrentUrl();
         notClosedUrlList.push(kujiUrl, pageUrl); // 閉鎖されていないURLかどうかを判定してリストに格納
         driver.findElement(By.cssSelector("#entry")).click(); // くじを引く
+    }
+
+    private static boolean internetIsAvailable() {
+        try {
+            final URL url = new URL("http://www.google.com");
+            final URLConnection connection = url.openConnection();
+            connection.connect();
+            connection.getInputStream().close();
+            return true;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            return false;
+        }
     }
 }
