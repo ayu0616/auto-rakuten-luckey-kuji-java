@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class Wait extends Date {
     public int getSecondsLeft() {
-        long now = (long) this.getTime();
+        long now = (long) this.getTime()+ 9 * 60 * 60 * 1000;
         int oneDayMilliSec = 1000 * 60 * 60 * 24; // 1日のミリ秒
         long milliSecLeft = oneDayMilliSec - (now % oneDayMilliSec); // 日付が変わるまでの時間
-        return (int) (milliSecLeft / 1000 - 60 * 60 * 9);
+        return (int) (milliSecLeft / 1000);
     }
 
     public boolean isShouldWait(int secondsLeft) {
