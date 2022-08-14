@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Wait extends Date {
     public int getSecondsLeft() {
-        long now = (long) this.getTime()+ 9 * 60 * 60 * 1000;
+        long now = (long) this.getTime() + 9 * 60 * 60 * 1000;
         int oneDayMilliSec = 1000 * 60 * 60 * 24; // 1日のミリ秒
         long milliSecLeft = oneDayMilliSec - (now % oneDayMilliSec); // 日付が変わるまでの時間
         return (int) (milliSecLeft / 1000);
@@ -19,9 +19,18 @@ public class Wait extends Date {
         int secondsLeft = getSecondsLeft();
         if (isShouldWait(secondsLeft)) {
             System.out.println(secondsLeft + "秒待機します");
-            Thread.sleep(secondsLeft * 1000);
+            logWaitSeconds(secondsLeft);
+            // Thread.sleep(secondsLeft * 1000);
         } else {
             System.out.println("待機せず実行します");
         }
+    }
+
+    public void logWaitSeconds(int secondsLeft) throws InterruptedException {
+        for (int i = 0; i < secondsLeft; i++) {
+            System.out.printf("\rあと%d秒", secondsLeft - i);
+            Thread.sleep(1000);
+        }
+        System.out.printf("\rあと%d秒\n", 0);
     }
 }
